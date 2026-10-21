@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9c4933">
+  <title>日本賞楓小旅行｜朋友旅行手冊</title>
+  <style>
+    :root {
+      --ink: #302824;
+      --muted: #786b63;
+      --paper: #fffaf3;
+      --cream: #f5eee4;
+      --maple: #b75536;
+      --maple-dark: #843a2c;
+      --line: #e6d6c5;
+      --shadow: 0 12px 30px rgba(75, 42, 25, .1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--cream);
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      line-height: 1.65;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    .wrap { width: min(100% - 32px, 720px); margin: 0 auto; }
+    header {
+      position: relative;
+      overflow: hidden;
+      padding: 46px 0 30px;
+      background: linear-gradient(145deg, #fff8ed 0%, #ead1bc 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    header::after {
+      content: "🍁 𖤣  🍂";
+      position: absolute;
+      right: 16px;
+      bottom: 12px;
+      color: rgba(132, 58, 44, .22);
+      font-size: 2rem;
+      letter-spacing: .2em;
+      transform: rotate(-8deg);
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--maple-dark);
+      font-size: .82rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 9vw, 3.25rem);
+      line-height: 1.15;
+      letter-spacing: .08em;
+    }
+    .intro {
+      max-width: 34rem;
+      margin: 16px 0 0;
+      color: #67584f;
+      font-size: 1rem;
+    }
+    .notice {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 20px;
+      padding: 8px 12px;
+      border: 1px solid #d8ad8e;
+      border-radius: 999px;
+      color: var(--maple-dark);
+      background: rgba(255,255,255,.62);
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    main { padding: 26px 0 52px; }
+    .tabs-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      margin: 0 0 28px;
+      padding: 10px 0;
+      background: rgba(245, 238, 228, .94);
+      backdrop-filter: blur(8px);
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .tab {
+      width: 100%;
+      padding: 10px 4px;
+      border: 1px solid #d8c3ae;
+      border-radius: 12px;
+      color: var(--maple-dark);
+      background: rgba(255,250,243,.74);
+      font: inherit;
+      font-size: .78rem;
+      white-space: nowrap;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .tab[aria-selected="true"] {
+      color: #fffaf3;
+      background: var(--maple);
+      border-color: var(--maple);
+      box-shadow: 0 5px 12px rgba(183, 85, 54, .2);
+    }
+    .day { margin: 0 0 26px; }
+    .day[hidden] { display: none; }
+    .day-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 0 0 12px;
+    }
+    .day-heading h2 { margin: 0; font-size: 1.45rem; letter-spacing: .04em; }
+    .day-heading span { color: var(--muted); font-size: .88rem; white-space: nowrap; }
+    .stops { display: grid; gap: 10px; }
+    .stop {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 14px;
+      padding: 16px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    .day.with-guide .stop { grid-template-columns: 72px minmax(0, 1fr) auto; }
+    .time {
+      padding-top: 2px;
+      color: var(--maple-dark);
+      font-size: .93rem;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+    .place { margin: 0; font-size: 1.08rem; font-weight: 800; line-height: 1.35; }
+    .desc { margin: 5px 0 0; color: var(--muted); font-size: .94rem; }
+    .stop-meta { margin: 9px 0 0; color: var(--maple-dark); font-size: .84rem; font-weight: 700; }
+    .stop-side {
+      display: flex;
+      min-width: 118px;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 8px;
+    }
+    .map-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid #d8ad8e;
+      border-radius: 50%;
+      color: var(--maple-dark);
+      background: #fff3e6;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .map-icon:hover,
+    .map-icon:focus-visible { background: #f8dcc8; transform: translateY(-1px); }
+    .map-icon svg { width: 19px; height: 19px; }
+    .address {
+      max-width: 160px;
+      margin: 0;
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.4;
+      text-align: right;
+    }
+    .transfer {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin: 2px 0;
+      padding: 4px 10px;
+      color: var(--moss);
+      font-size: .82rem;
+      font-weight: 700;
+    }
+    .transfer::before {
+      content: "↓";
+      color: var(--gold);
+      font-size: 1.1rem;
+    }
+    .tip {
+      margin: 8px 0 0;
+      padding: 13px 15px;
+      border-radius: 14px;
+      background: #dfe5d7;
+      color: #4a5b43;
+      font-size: .9rem;
+    }
+    footer {
+      padding: 24px 0 40px;
+      color: var(--muted);
+      font-size: .82rem;
+      text-align: center;
+    }
+    @media (min-width: 560px) {
+      header { padding-top: 64px; padding-bottom: 42px; }
+      main { padding-top: 36px; }
+      .stop { grid-template-columns: 86px 1fr; padding: 18px 20px; }
+      .day.with-guide .stop { grid-template-columns: 86px minmax(0, 1fr) auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <p class="eyebrow">TOKYO · AUTUMN LEAVES · 4 DAYS 3 NIGHTS</p>
+      <h1>日本賞楓小旅行</h1>
+      <p class="intro">給同行夥伴的東京賞楓手冊。每天用一個頁籤查看行程，留一點空白給秋天的散步與偶遇。</p>
+      <div class="notice">✦ 店名與時間皆為示意，之後可替換成實際資料</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav class="tabs-wrap" aria-label="每日行程頁籤">
+      <div class="tabs" role="tablist" aria-label="東京賞楓每日行程">
+        <button class="tab" id="tab-day1" type="button" role="tab" aria-selected="true" aria-controls="day1" tabindex="0">Day 1</button>
+        <button class="tab" id="tab-day2" type="button" role="tab" aria-selected="false" aria-controls="day2" tabindex="-1">Day 2</button>
+        <button class="tab" id="tab-day3" type="button" role="tab" aria-selected="false" aria-controls="day3" tabindex="-1">Day 3</button>
+        <button class="tab" id="tab-day4" type="button" role="tab" aria-selected="false" aria-controls="day4" tabindex="-1">Day 4</button>
+        <button class="tab" id="tab-reminder" type="button" role="tab" aria-selected="false" aria-controls="reminder" tabindex="-1">行前提醒</button>
+      </div>
+    </nav>
+
+    <section class="day with-guide" id="day1" role="tabpanel" aria-labelledby="tab-day1">
+      <div class="day-heading"><h2>Day 1｜初見東京</h2><span>抵達・城市散步</span></div>
+      <div class="stops">
+        <article class="stop">
+          <div class="time">10:30</div>
+          <div class="stop-main">
+            <h3 class="place">淺草寺</h3>
+            <p class="desc">從雷門開始逛仲見世通，先感受東京的老街氣氛。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Senso-ji%20Temple%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟淺草寺" title="在 Google Maps 開啟淺草寺">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都台東區淺草 2-3-1</p>
+          </div>
+        </article>
+        <div class="transfer">前往淺草午餐：步行約 5 分鐘，沿仲見世通慢慢走</div>
+        <article class="stop">
+          <div class="time">12:30</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜淺草午餐</h3>
+            <p class="desc">安排一間在地定食店，吃飽再慢慢走到隅田川邊。</p>
+            <p class="stop-meta">建議停留 1 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Asakusa%20lunch%20restaurant%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋淺草午餐" title="在 Google Maps 搜尋淺草午餐">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">淺草雷門周邊（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往東京晴空塔：搭東武晴空塔線約 15 分鐘（含步行）</div>
+        <article class="stop">
+          <div class="time">15:00</div>
+          <div class="stop-main">
+            <h3 class="place">東京晴空塔</h3>
+            <p class="desc">登高看城市全景，天氣好時可以遠眺富士山。</p>
+            <p class="stop-meta">建議停留 2 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Tokyo%20Skytree%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟東京晴空塔" title="在 Google Maps 開啟東京晴空塔">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都墨田區押上 1-1-2</p>
+          </div>
+        </article>
+        <div class="transfer">前往押上晚餐：步行約 8 分鐘</div>
+        <article class="stop">
+          <div class="time">18:30</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜押上晚餐</h3>
+            <p class="desc">晚餐選一間居酒屋，輕鬆結束第一天。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Oshiage%20izakaya%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋押上晚餐" title="在 Google Maps 搜尋押上晚餐">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">押上站周邊（示意位置）</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="day with-guide" id="day2" role="tabpanel" aria-labelledby="tab-day2" hidden>
+      <div class="day-heading"><h2>Day 2｜經典東京</h2><span>神社・購物・夜景</span></div>
+      <div class="stops">
+        <article class="stop">
+          <div class="time">09:00</div>
+          <div class="stop-main">
+            <h3 class="place">明治神宮</h3>
+            <p class="desc">在茂密的林蔭裡散步，感受市中心難得的安靜。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Meiji%20Jingu%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟明治神宮" title="在 Google Maps 開啟明治神宮">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都渋谷區代代木神園町 1-1</p>
+          </div>
+        </article>
+        <div class="transfer">前往表參道・原宿：搭電車約 20 分鐘（含步行）</div>
+        <article class="stop">
+          <div class="time">11:30</div>
+          <div class="stop-main">
+            <h3 class="place">表參道・原宿</h3>
+            <p class="desc">沿著表參道逛街，再到竹下通看看年輕潮流。</p>
+            <p class="stop-meta">建議停留 2 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Omotesando%20Harajuku%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋表參道原宿" title="在 Google Maps 搜尋表參道原宿">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">表參道・原宿周邊（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往原宿甜點：步行約 8 分鐘</div>
+        <article class="stop">
+          <div class="time">14:30</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜原宿甜點</h3>
+            <p class="desc">安排一間特色咖啡店，補充體力再繼續走。</p>
+            <p class="stop-meta">建議停留 1 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Harajuku%20dessert%20cafe%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋原宿甜點" title="在 Google Maps 搜尋原宿甜點">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">原宿竹下通周邊（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往澀谷十字路口：搭電車約 15 分鐘（含步行）</div>
+        <article class="stop">
+          <div class="time">18:00</div>
+          <div class="stop-main">
+            <h3 class="place">澀谷十字路口</h3>
+            <p class="desc">看人潮穿越十字路口，晚上到附近找居酒屋吃飯。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Shibuya%20Scramble%20Crossing%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟澀谷十字路口" title="在 Google Maps 開啟澀谷十字路口">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都渋谷區道玄坂 2-24-1（示意位置）</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="day with-guide" id="day3" role="tabpanel" aria-labelledby="tab-day3" hidden>
+      <div class="day-heading"><h2>Day 3｜慢遊東京</h2><span>下町・文藝・夜色</span></div>
+      <div class="stops">
+        <article class="stop">
+          <div class="time">09:30</div>
+          <div class="stop-main">
+            <h3 class="place">谷中銀座</h3>
+            <p class="desc">走訪懷舊商店街，買幾樣小點心邊走邊吃。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Yanaka%20Ginza%20Shopping%20Street%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟谷中銀座" title="在 Google Maps 開啟谷中銀座">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都台東區谷中 3-13-1</p>
+          </div>
+        </article>
+        <div class="transfer">前往谷中午餐：步行約 5 分鐘</div>
+        <article class="stop">
+          <div class="time">12:00</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜谷中午餐</h3>
+            <p class="desc">找一間小巧的洋食店，享受不趕時間的午餐。</p>
+            <p class="stop-meta">建議停留 1 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Yanaka%20lunch%20restaurant%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋谷中午餐" title="在 Google Maps 搜尋谷中午餐">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">谷中銀座周邊（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往上野公園・阿美橫町：步行約 20 分鐘</div>
+        <article class="stop">
+          <div class="time">14:30</div>
+          <div class="stop-main">
+            <h3 class="place">上野公園・阿美橫町</h3>
+            <p class="desc">下午逛公園與市場，感受熱鬧又生活化的東京。</p>
+            <p class="stop-meta">建議停留 3 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Ueno%20Park%20and%20Ameyoko%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟上野公園阿美橫町" title="在 Google Maps 開啟上野公園阿美橫町">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都台東區上野公園 5-20</p>
+          </div>
+        </article>
+        <div class="transfer">前往上野晚餐：步行約 8 分鐘</div>
+        <article class="stop">
+          <div class="time">19:00</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜上野晚餐</h3>
+            <p class="desc">用一頓暖呼呼的拉麵或燒肉，替今天收尾。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Ueno%20dinner%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋上野晚餐" title="在 Google Maps 搜尋上野晚餐">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">上野站・阿美橫町周邊（示意位置）</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="day with-guide" id="day4" role="tabpanel" aria-labelledby="tab-day4" hidden>
+      <div class="day-heading"><h2>Day 4｜最後巡禮</h2><span>採買・返程</span></div>
+      <div class="stops">
+        <article class="stop">
+          <div class="time">09:00</div>
+          <div class="stop-main">
+            <h3 class="place">築地場外市場</h3>
+            <p class="desc">用新鮮海鮮和玉子燒當早餐，為旅程補充能量。</p>
+            <p class="stop-meta">建議停留 2 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Tsukiji%20Outer%20Market%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟築地場外市場" title="在 Google Maps 開啟築地場外市場">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都中央區築地 4-16-2</p>
+          </div>
+        </article>
+        <div class="transfer">前往銀座散步：步行約 15 分鐘</div>
+        <article class="stop">
+          <div class="time">11:30</div>
+          <div class="stop-main">
+            <h3 class="place">銀座散步</h3>
+            <p class="desc">逛百貨與選物店，採買伴手禮和最後想帶回家的東西。</p>
+            <p class="stop-meta">建議停留 1.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Ginza%20Six%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟銀座" title="在 Google Maps 開啟銀座">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">東京都中央區銀座 6-10-1（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往銀座午茶：步行約 5 分鐘</div>
+        <article class="stop">
+          <div class="time">14:00</div>
+          <div class="stop-main">
+            <h3 class="place">示意店名｜銀座午茶</h3>
+            <p class="desc">找間安靜咖啡店坐下，整理行李與回味這幾天。</p>
+            <p class="stop-meta">建議停留 1 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Ginza%20tea%20cafe%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 搜尋銀座午茶" title="在 Google Maps 搜尋銀座午茶">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">銀座 6 丁目周邊（示意位置）</p>
+          </div>
+        </article>
+        <div class="transfer">前往機場：搭電車約 60 分鐘（以實際機場為準）</div>
+        <article class="stop">
+          <div class="time">16:30</div>
+          <div class="stop-main">
+            <h3 class="place">前往機場</h3>
+            <p class="desc">預留交通與報到時間，帶著東京的好心情回家。</p>
+            <p class="stop-meta">移動與報到約 2.5 小時</p>
+          </div>
+          <div class="stop-side">
+            <a class="map-icon" href="https://www.google.com/maps/search/?api=1&query=Haneda%20Airport%2C%20Tokyo" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟羽田機場" title="在 Google Maps 開啟羽田機場">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>
+            </a>
+            <p class="address">羽田機場（示意目的地）</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="day" id="reminder" role="tabpanel" aria-labelledby="tab-reminder" hidden>
+      <p class="tip">小提醒｜正式出發前，再補上交通方式、預約資訊與實際店名，就可以直接分享給同行朋友。</p>
+      <div class="day-heading"><h2 id="pretrip">行前提醒</h2><span>出發前確認</span></div>
+      <div class="stops">
+        <article class="stop"><div class="time">天氣</div><div><p class="place">東京多雲，約 18–24°C</p></div></article>
+        <article class="stop"><div class="time">要帶的東西</div><div><p class="place">護照、行動電源、摺傘與舒適好走的鞋</p></div></article>
+        <article class="stop"><div class="time">集合時間</div><div><p class="place">上午 08:30，飯店大廳集合</p></div></article>
+      </div>
+    </section>
+  </main>
+
+  <footer>東京賞楓行程草稿 · 時間與店名可自由替換</footer>
+
+  <script>
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+    const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+
+    function showDay(selectedTab) {
+      tabs.forEach((tab) => {
+        const isSelected = tab === selectedTab;
+        tab.setAttribute('aria-selected', String(isSelected));
+        tab.tabIndex = isSelected ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== selectedTab.getAttribute('aria-controls');
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => showDay(tab));
+      tab.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const nextIndex = (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        tabs[nextIndex].focus();
+        showDay(tabs[nextIndex]);
+      });
+    });
+  </script>
+</body>
+</html>
