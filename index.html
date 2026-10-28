@@ -32,9 +32,32 @@
     header {
       position: relative;
       overflow: hidden;
+      min-height: 360px;
       padding: 46px 0 30px;
       background: linear-gradient(145deg, #fff8ed 0%, #ead1bc 100%);
       border-bottom: 1px solid var(--line);
+    }
+    .cover-art {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .cover-art img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .cover-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(255, 250, 243, .92) 0%, rgba(255, 250, 243, .66) 34%, rgba(255, 250, 243, .08) 70%);
+    }
+    header .wrap {
+      position: relative;
+      z-index: 1;
     }
     header::after {
       content: "🍁 𖤣  🍂";
@@ -127,7 +150,7 @@
     }
     .day-heading h2 { margin: 0; font-size: 1.45rem; letter-spacing: .04em; }
     .day-heading span { color: var(--muted); font-size: .88rem; white-space: nowrap; }
-    .stops { display: grid; gap: 10px; }
+    .stops { display: grid; gap: 12px; }
     .stop {
       display: grid;
       grid-template-columns: 72px 1fr;
@@ -136,7 +159,27 @@
       background: var(--paper);
       border: 1px solid var(--line);
       border-radius: 16px;
-      box-shadow: var(--shadow);
+      box-shadow: 0 5px 16px rgba(75, 42, 25, .07);
+    }
+    .stop.reveal {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    .stop.reveal.is-visible {
+      animation: stop-rise .4s ease-out both;
+      animation-delay: var(--reveal-delay, 0s);
+    }
+    @keyframes stop-rise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stop.reveal,
+      .stop.reveal.is-visible {
+        opacity: 1;
+        transform: none;
+        animation: none;
+      }
     }
     .day.with-guide .stop { grid-template-columns: 72px minmax(0, 1fr) auto; }
     .time {
@@ -219,6 +262,9 @@
 </head>
 <body>
   <header>
+    <div class="cover-art" aria-hidden="true">
+      <img src="images/cover.webp" alt="">
+    </div>
     <div class="wrap">
       <p class="eyebrow">TOKYO · AUTUMN LEAVES · 4 DAYS 3 NIGHTS</p>
       <h1>日本賞楓小旅行</h1>
@@ -541,6 +587,29 @@
         showDay(tabs[nextIndex]);
       });
     });
+
+    const animatedStops = Array.from(document.querySelectorAll('.stop'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!reduceMotion) {
+      animatedStops.forEach((stop, index) => {
+        stop.classList.add('reveal');
+        stop.style.setProperty('--reveal-delay', `${(index % 4) * 0.08}s`);
+      });
+
+      if ('IntersectionObserver' in window) {
+        const stopObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.16 });
+        animatedStops.forEach((stop) => stopObserver.observe(stop));
+      } else {
+        animatedStops.forEach((stop) => stop.classList.add('is-visible'));
+      }
+    }
   </script>
 </body>
 </html>
