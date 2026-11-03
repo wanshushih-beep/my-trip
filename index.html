@@ -60,9 +60,9 @@ h2 .n { display: inline-grid; place-items: center; width: 28px; height: 28px; fl
 h3 { margin: 20px 0 8px; font-size: .9rem; color: var(--dim); font-weight: 700; letter-spacing: .06em; }
 h4 { margin: 0 0 10px; font-size: 1rem; }
 
-.layout { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "members" "add" "settle" "stats" "list" "share" "tools"; }
+.layout { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); grid-template-areas: "members" "add" "settle" "stats" "list" "tools" "share"; }
 @media (min-width: 860px) {
-  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "members settle" "add settle" "add stats" "share list" "tools list"; align-items: start; }
+  .layout { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "members settle" "add settle" "add stats" "tools list" "share list"; align-items: start; }
 }
 .a-members { grid-area: members; } .a-add { grid-area: add; } .a-settle { grid-area: settle; }
 .a-stats { grid-area: stats; } .a-list { grid-area: list; } .a-tools { grid-area: tools; } .a-share { grid-area: share; }
@@ -79,6 +79,16 @@ input:focus-visible, select:focus-visible, .btn:focus-visible, .chip button:focu
   outline: 3px solid var(--teal); outline-offset: 2px;
 }
 .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.grid2 > * { min-width: 0; }
+.field input, .field select { min-width: 0; max-width: 100%; }
+input[type=date] { -webkit-appearance: none; appearance: none; display: block; width: 100%; line-height: 1.2; text-align: left; }
+input[type=date]::-webkit-date-and-time-value { min-width: 0; text-align: left; }
+input[type=date]::-webkit-datetime-edit { padding: 0; }
+@media (max-width: 420px) {
+  .grid2 { gap: 8px; }
+  .field input[type=date] { padding-left: 8px; padding-right: 6px; font-size: 15px; }
+  input[type=date]::-webkit-calendar-picker-indicator { margin: 0 0 0 2px; padding: 0; width: 16px; }
+}
 .row { display: flex; gap: 8px; align-items: stretch; margin-bottom: 8px; }
 .row input, .row select { flex: 1; min-width: 0; width: auto; }
 .wrapx { flex-wrap: wrap; }
@@ -313,30 +323,6 @@ section[id^="sec-"] { scroll-margin-top: 12px; }
         <ul id="expense-list" class="elist"></ul>
       </section>
 
-      <section id="sec-share" class="card a-share" aria-labelledby="h-share">
-        <h2 id="h-share">分享給旅伴<img class="h-ico" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAzNEw1OCAxMCA0NCA1NCAzMiA0MHoiIGZpbGw9IiNmZmZjZjgiLz48cGF0aCBkPSJNMzIgNDBMNTggMTBNMzIgNDB2MTRsOC05IiBmaWxsPSIjZDdmMWVlIi8+PC9zdmc+Cg==" alt="" width="38" height="38"></h2>
-        <h3>① 邀請旅伴開啟網站</h3>
-        <div class="field">
-          <label for="share-url">網站網址（網站放上 GitHub Pages 後，把網址貼在這裡）</label>
-          <input id="share-url" type="text" inputmode="url" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="https://你的帳號.github.io/倉庫名/">
-        </div>
-        <div class="qrbox"><canvas id="qr-site" hidden aria-label="網站網址的 QR code"></canvas></div>
-        <p id="qr-site-hint" class="hint"></p>
-        <div class="row wrapx">
-          <button type="button" class="btn small" id="btn-copy-url">複製網址</button>
-          <button type="button" class="btn small ghost" id="btn-save-qr">下載 QR 圖片</button>
-        </div>
-        <h3>② 把目前的帳目傳給旅伴</h3>
-        <p class="hint">每個人手機裡的帳目是各自獨立的，不會自動同步。按下面的按鈕，會把目前的旅伴和支出放進一個 QR code，旅伴掃描後就能載入同一份帳目（只是當下的快照）。</p>
-        <button type="button" class="btn small" id="btn-share-data">產生帳目 QR code</button>
-        <div class="qrbox"><canvas id="qr-data" hidden aria-label="帳目分享的 QR code"></canvas></div>
-        <div class="row" id="share-link-row" hidden>
-          <input id="share-link" type="text" readonly aria-label="帳目分享連結">
-          <button type="button" class="btn small" id="btn-copy-link">複製</button>
-        </div>
-        <p id="share-msg" class="msg" role="status"></p>
-      </section>
-
       <section id="sec-tools" class="card a-tools" aria-labelledby="h-tools">
         <h2 id="h-tools">匯率與幣別<img class="h-ico" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyNCIgZmlsbD0iI2Q3ZjFlZSIvPjxlbGxpcHNlIGN4PSIzMiIgY3k9IjMyIiByeD0iMTAiIHJ5PSIyNCIvPjxwYXRoIGQ9Ik04IDMyaDQ4TTEyIDE5aDQwTTEyIDQ1aDQwIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="" width="38" height="38"></h2>
         <div id="bot-info" class="botinfo"></div>
@@ -388,6 +374,30 @@ section[id^="sec-"] { scroll-margin-top: 12px; }
         </div>
         <p id="tools-msg" class="msg" role="status"></p>
       </section>
+
+      <section id="sec-share" class="card a-share" aria-labelledby="h-share">
+        <h2 id="h-share">分享給旅伴<img class="h-ico" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAzNEw1OCAxMCA0NCA1NCAzMiA0MHoiIGZpbGw9IiNmZmZjZjgiLz48cGF0aCBkPSJNMzIgNDBMNTggMTBNMzIgNDB2MTRsOC05IiBmaWxsPSIjZDdmMWVlIi8+PC9zdmc+Cg==" alt="" width="38" height="38"></h2>
+        <h3>① 邀請旅伴開啟網站</h3>
+        <div class="field">
+          <label for="share-url">網站網址（網站放上 GitHub Pages 後，把網址貼在這裡）</label>
+          <input id="share-url" type="text" inputmode="url" autocapitalize="off" autocomplete="off" spellcheck="false" placeholder="https://你的帳號.github.io/倉庫名/">
+        </div>
+        <div class="qrbox"><canvas id="qr-site" hidden aria-label="網站網址的 QR code"></canvas></div>
+        <p id="qr-site-hint" class="hint"></p>
+        <div class="row wrapx">
+          <button type="button" class="btn small" id="btn-copy-url">複製網址</button>
+          <button type="button" class="btn small ghost" id="btn-save-qr">下載 QR 圖片</button>
+        </div>
+        <h3>② 把目前的帳目傳給旅伴</h3>
+        <p class="hint">每個人手機裡的帳目是各自獨立的，不會自動同步。按下面的按鈕，會把目前的旅伴和支出放進一個 QR code，旅伴掃描後就能載入同一份帳目（只是當下的快照）。</p>
+        <button type="button" class="btn small" id="btn-share-data">產生帳目 QR code</button>
+        <div class="qrbox"><canvas id="qr-data" hidden aria-label="帳目分享的 QR code"></canvas></div>
+        <div class="row" id="share-link-row" hidden>
+          <input id="share-link" type="text" readonly aria-label="帳目分享連結">
+          <button type="button" class="btn small" id="btn-copy-link">複製</button>
+        </div>
+        <p id="share-msg" class="msg" role="status"></p>
+      </section>
     </main>
 
     <footer class="foot">
@@ -402,8 +412,8 @@ section[id^="sec-"] { scroll-margin-top: 12px; }
     <a href="#sec-add" data-t="sec-add"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNOCAyMGg0NGE0IDQgMCAwIDEgNCA0djI4YTQgNCAwIDAgMS00IDRIMTJhNCA0IDAgMCAxLTQtNHoiIGZpbGw9IiNmYmVmYzkiLz48cGF0aCBkPSJNOCAyMGwzNC0xMSA0IDExIi8+PHJlY3QgeD0iMzgiIHk9IjMyIiB3aWR0aD0iMTgiIGhlaWdodD0iMTMiIHJ4PSI0IiBmaWxsPSIjZTYwZjNkIi8+PGNpcmNsZSBjeD0iNDYiIGN5PSIzOC41IiByPSIyIiBmaWxsPSIjZmZmY2Y4IiBzdHJva2U9Im5vbmUiLz48L3N2Zz4K" alt="">記帳</a>
     <a href="#sec-settle" data-t="sec-settle"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyNCIgZmlsbD0iI2ZmZmNmOCIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjE5IiBzdHJva2Utd2lkdGg9IjEuOCIvPjxwYXRoIGQ9Ik00MiAyMmwtNiAxNC0xNCA2IDYtMTR6IiBmaWxsPSIjZTYwZjNkIi8+PHBhdGggZD0iTTMyIDR2NU0zMiA1NXY1TTQgMzJoNU01NSAzMmg1Ii8+PC9zdmc+Cg==" alt="">結算</a>
     <a href="#sec-list" data-t="sec-list"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAxOGg1MnYxMGE1IDUgMCAwIDAgMCAxMHYxMEg2VjM4YTUgNSAwIDAgMCAwLTEweiIgZmlsbD0iI2ZiZWZjOSIvPjxwYXRoIGQ9Ik00MiAyMXYyNCIgc3Ryb2tlLWRhc2hhcnJheT0iMyA0IiBzdHJva2Utd2lkdGg9IjIuNSIvPjxwb2x5Z29uIHBvaW50cz0iMjIsMjUgMjQuNCwzMC42IDMwLjUsMzEuMiAyNS45LDM1LjIgMjcuMyw0MS4yIDIyLDM4IDE2LjcsNDEuMiAxOC4xLDM1LjIgMTMuNSwzMS4yIDE5LjYsMzAuNiIgZmlsbD0iI2U2MGYzZCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+Cg==" alt="">紀錄</a>
-    <a href="#sec-share" data-t="sec-share"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAzNEw1OCAxMCA0NCA1NCAzMiA0MHoiIGZpbGw9IiNmZmZjZjgiLz48cGF0aCBkPSJNMzIgNDBMNTggMTBNMzIgNDB2MTRsOC05IiBmaWxsPSIjZDdmMWVlIi8+PC9zdmc+Cg==" alt="">分享</a>
     <a href="#sec-tools" data-t="sec-tools"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyNCIgZmlsbD0iI2Q3ZjFlZSIvPjxlbGxpcHNlIGN4PSIzMiIgY3k9IjMyIiByeD0iMTAiIHJ5PSIyNCIvPjxwYXRoIGQ9Ik04IDMyaDQ4TTEyIDE5aDQwTTEyIDQ1aDQwIiBzdHJva2Utd2lkdGg9IjIiLz48L3N2Zz4K" alt="">匯率</a>
+    <a href="#sec-share" data-t="sec-share"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyMTE4MTUiIHN0cm9rZS13aWR0aD0iMyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAzNEw1OCAxMCA0NCA1NCAzMiA0MHoiIGZpbGw9IiNmZmZjZjgiLz48cGF0aCBkPSJNMzIgNDBMNTggMTBNMzIgNDB2MTRsOC05IiBmaWxsPSIjZDdmMWVlIi8+PC9zdmc+Cg==" alt="">分享</a>
   </nav>
   <script>
 (function () {
