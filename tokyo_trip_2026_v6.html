@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#9c4933">
+  <title>東京賞楓四日｜2026.12.3–12.6 整合版</title>
+  <style>
+    :root{
+      --ink:#302824; --muted:#786b63; --paper:#fffaf3; --cream:#f5eee4;
+      --maple:#b75536; --maple-dark:#843a2c; --line:#e6d6c5;
+      --moss:#4a5b43; --gold-bg:#f6e9c8; --book-bg:#f8dcd2; --ok-bg:#dfe5d7; --dark:#4d3d35;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --ink:#f1e7dc; --muted:#c3b3a6; --paper:#2a2420; --cream:#1f1a17;
+        --maple:#d9704f; --maple-dark:#f0a98f; --line:#4a3f38;
+        --moss:#c9d8bf; --gold-bg:#4a3d1c; --book-bg:#5a2e24; --ok-bg:#34402f; --dark:#120e0c;
+      }
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--cream);
+      font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+      line-height:1.65;-webkit-text-size-adjust:100%}
+    a{color:var(--maple-dark)}
+    .wrap{width:min(100% - 32px,760px);margin:0 auto}
+    header{position:relative;overflow:hidden;padding:48px 0 30px;border-bottom:1px solid var(--line);
+      background:linear-gradient(145deg,#fff3e2 0%,#f0c9a8 55%,#d98a62 100%)}
+    @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) header{background:linear-gradient(145deg,#3a2a22,#5b2f23 60%,#7a3b28)}}
+    header svg{position:absolute;right:-30px;top:-20px;width:230px;opacity:.26}
+    header .wrap{position:relative;z-index:1}
+    .eyebrow{margin:0 0 8px;color:var(--maple-dark);font-size:.78rem;font-weight:800;letter-spacing:.16em}
+    h1{margin:0;font-size:clamp(2rem,9vw,3rem);line-height:1.15;letter-spacing:.08em}
+    .intro{max-width:38rem;margin:14px 0 0;color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+    .stat{padding:9px 11px;border:1px solid #d8ad8e;border-radius:14px;background:rgba(255,255,255,.62);font-size:.78rem;line-height:1.45}
+    .stat b{display:block;color:#843a2c;font-size:.72rem}
+    @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .stat{background:rgba(0,0,0,.25);border-color:#7a4b3a}:root:not([data-theme="light"]) .stat b{color:#f0a98f}}
+    @media (max-width:520px){.stats{grid-template-columns:1fr}}
+    main{padding:22px 0 52px}
+    .tabs-wrap{position:sticky;top:0;z-index:5;margin:0 0 22px;padding:10px 0;background:color-mix(in srgb,var(--cream) 94%,transparent);backdrop-filter:blur(8px)}
+    .tabs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+    .tab{flex:1 0 auto;min-width:68px;padding:9px 10px;border:1px solid var(--line);border-radius:12px;color:var(--maple-dark);
+      background:var(--paper);font:inherit;font-size:.82rem;font-weight:800;white-space:nowrap;cursor:pointer;line-height:1.3}
+    .tab small{display:block;font-weight:600;color:var(--muted);font-size:.68rem}
+    .tab[aria-selected="true"]{color:#fffaf3;background:var(--maple);border-color:var(--maple);box-shadow:0 5px 12px rgba(183,85,54,.22)}
+    .tab[aria-selected="true"] small{color:#ffe7da}
+    .panel[hidden]{display:none}
+    .day-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:0 0 8px;flex-wrap:wrap}
+    .day-heading h2{margin:0;font-size:1.35rem;letter-spacing:.03em}
+    .day-heading span{color:var(--muted);font-size:.84rem}
+    .banner{margin:0 0 14px;padding:13px 15px;border-radius:16px;background:var(--dark);color:#fff;font-size:.88rem}
+    .banner b{color:#ffd9ad}
+    .banner small{display:block;margin-top:5px;color:#e7d9cd}
+    .stops{display:grid;gap:10px}
+    .stop{display:grid;grid-template-columns:60px minmax(0,1fr);gap:12px;padding:15px 13px;background:var(--paper);
+      border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 16px rgba(75,42,25,.07)}
+    .time{color:var(--maple-dark);font-size:.9rem;font-weight:800;line-height:1.35;padding-top:2px}
+    .place{margin:0;font-size:1.04rem;font-weight:800;line-height:1.35}
+    .desc{margin:5px 0 0;color:var(--muted);font-size:.91rem}
+    .meta{margin:8px 0 0;color:var(--maple-dark);font-size:.82rem;font-weight:700}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 0}
+    .tag{display:inline-block;padding:3px 9px;border-radius:8px;font-size:.77rem;font-weight:700;line-height:1.45}
+    .tag.book{background:var(--book-bg);color:var(--maple-dark)}
+    .tag.warn{background:var(--gold-bg);color:var(--ink)}
+    .tag.ok{background:var(--ok-bg);color:var(--moss)}
+    .side{grid-column:2;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:2px}
+    .map-icon{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #d8ad8e;border-radius:50%;
+      color:var(--maple-dark);background:#fff3e6;flex:none}
+    @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .map-icon{background:#3b2f28}}
+    .map-icon svg{width:18px;height:18px}
+    .addr{margin:0;color:var(--muted);font-size:.78rem;line-height:1.4}
+    .links{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 0}
+    .links a{padding:4px 10px;border:1px solid var(--maple);border-radius:999px;font-size:.78rem;font-weight:700;text-decoration:none;color:var(--maple-dark)}
+    .links a:hover{background:var(--maple);color:#fff}
+    .links a.route{border-style:dashed}
+    .transfer{display:flex;gap:8px;margin:0;padding:3px 10px;color:var(--moss);font-size:.82rem;font-weight:700}
+    .transfer::before{content:"↓";color:#b88a2e;font-size:1.05rem;line-height:1.5}
+    @media (min-width:560px){
+      .stop{grid-template-columns:76px minmax(0,1fr) auto;padding:17px 18px}
+      .side{grid-column:auto;flex-direction:column;align-items:flex-end;justify-content:center;min-width:130px}
+      .addr{max-width:150px;text-align:right}
+    }
+    .alert{margin:0 0 14px;padding:13px 15px;border-radius:16px;background:var(--book-bg);color:var(--ink);font-size:.9rem}
+    .sec{margin:0 0 12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+    .sec summary{cursor:pointer;padding:14px 16px;font-weight:800;font-size:1.02rem;list-style:none;display:flex;justify-content:space-between;gap:10px}
+    .sec summary::-webkit-details-marker{display:none}
+    .sec summary::after{content:"＋";color:var(--maple)}
+    .sec[open] summary::after{content:"－"}
+    .sec .body{padding:0 16px 16px;font-size:.92rem}
+    .sec .body h4{margin:16px 0 4px;color:var(--maple-dark);font-size:.95rem}
+    .sec .body ul,.sec .body ol{margin:6px 0;padding-left:1.2em}
+    .sec .body li{margin:4px 0}
+    table{width:100%;border-collapse:collapse;font-size:.84rem;margin:8px 0}
+    th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+    th{color:var(--maple-dark);font-size:.78rem;white-space:nowrap}
+    .tblwrap{overflow-x:auto}
+    .flight{padding:12px 14px;margin:8px 0;border-radius:12px;background:var(--cream);border:1px solid var(--line)}
+    .src{font-size:.78rem;color:var(--muted)}
+    .check label{display:flex;gap:10px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.92rem}
+    .check input{width:19px;height:19px;accent-color:var(--maple);flex:none;margin-top:3px}
+    .prog{height:8px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:12px}
+    .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,#c99b58,var(--maple))}
+    footer{padding:22px 0 40px;color:var(--muted);font-size:.8rem;text-align:center}
+    @media print{.tabs-wrap{display:none}.panel[hidden]{display:block!important;page-break-before:always}}
+  </style>
+</head>
+<body>
+<header>
+  <svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#b75536" d="M50 3l7 18 13-8-3 20 20-4-9 15 17 7-17 8 6 17-19-4 1 21-12-9-4 24-4-24-12 9 1-21-19 4 6-17-17-8 17-7-9-15 20 4-3-20 13 8z"/></svg>
+  <div class="wrap">
+    <p class="eyebrow">TOKYO · AUTUMN LEAVES · 4 DAYS 3 NIGHTS · v6</p>
+    <h1>東京賞楓四日</h1>
+    <p class="intro">2026.12.3（四）– 12.6（日）。整合版：保留順路的電車動線，採用另一版查證過的官方資訊（預約規則、LuggAgent 收件時間、貴賓室時間、庭園活動日期）。</p>
+    <div class="stats">
+      <div class="stat"><b>去程 MM620</b>12/3 02:25 TPE T1 → 06:30 NRT T1</div>
+      <div class="stat"><b>住宿</b>Sheraton Grande Tokyo Bay｜3 晚</div>
+      <div class="stat"><b>回程 MM627</b>12/6 22:05 NRT T1 → 12/7 01:25 TPE T1</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <nav class="tabs-wrap" aria-label="每日行程頁籤">
+    <div class="tabs" role="tablist">
+      <button class="tab" id="tab-day1" role="tab" aria-selected="true" aria-controls="day1" type="button">Day 1<small>12/3 四</small></button>
+      <button class="tab" id="tab-day2" role="tab" aria-selected="false" aria-controls="day2" tabindex="-1" type="button">Day 2<small>12/4 五</small></button>
+      <button class="tab" id="tab-day3" role="tab" aria-selected="false" aria-controls="day3" tabindex="-1" type="button">Day 3<small>12/5 六</small></button>
+      <button class="tab" id="tab-day4" role="tab" aria-selected="false" aria-controls="day4" tabindex="-1" type="button">Day 4<small>12/6 日</small></button>
+      <button class="tab" id="tab-reminder" role="tab" aria-selected="false" aria-controls="reminder" tabindex="-1" type="button">行前提醒<small>預約・退稅</small></button>
+    </div>
+  </nav>
+
+  <section class="panel" id="day1" role="tabpanel" aria-labelledby="tab-day1"></section>
+  <section class="panel" id="day2" role="tabpanel" aria-labelledby="tab-day2" hidden></section>
+  <section class="panel" id="day3" role="tabpanel" aria-labelledby="tab-day3" hidden></section>
+  <section class="panel" id="day4" role="tabpanel" aria-labelledby="tab-day4" hidden></section>
+
+  <section class="panel" id="reminder" role="tabpanel" aria-labelledby="tab-reminder" hidden>
+    <div class="day-heading"><h2>行前提醒</h2><span>最後整理：2026-11-18</span></div>
+
+    <div class="alert"><b>今晚就要動的事</b><br>
+      ① <b>SHIBUYA SKY 12/3 16:00</b>：官方 FAQ 寫「入場日 2 週前的日本時間 00:00 開賣」，所以 12/3 的票在 <b>日本 11/19 00:00＝台灣 11/18 23:00</b> 開賣。每 20 分鐘一個時段，夕陽時段很快完售。若 12/3 搶不到，可試 12/4（台灣 11/19 23:00）、12/5（11/20 23:00）。<br>
+      ② <b>大和壽司 12/4（五）</b>：TableCheck 預約（1–2 人、受理 08:00–10:00 時段、預約費 ¥400／人不退）。<br>
+      ③ <b>THE MOON 12/4 晚餐</b>、<b>LuggAgent 去回程</b>。
+    </div>
+
+    <details class="sec" open>
+      <summary>📅 預約時間表（已用官方頁面核對）</summary>
+      <div class="body">
+        <div class="tblwrap"><table>
+          <tr><th>項目</th><th>規則（已查證）</th><th>連結</th></tr>
+          <tr><td>SHIBUYA SKY 12/3 16:00</td><td>2 週前日本 00:00 開賣；20 分鐘一個入場時段；網路票前一日可免費取消（對象票）；屋頂關閉時當日可免費取消；入場要出示<b>護照</b>（不需 QR）；營業 10:00–22:30，最終入場 21:20</td><td><a href="https://www.shibuya-scramble-square.com/sky/ticket/" target="_blank" rel="noopener">官方購票</a>・<a href="https://www.shibuya-scramble-square.com/sky/faq/" target="_blank" rel="noopener">FAQ</a></td></tr>
+          <tr><td>大和壽司 12/4（五）</td><td>只收 1–2 人；預約受理 08:00–10:00；預約費 ¥400／人不退款；用餐上限 1 小時；要信用卡預授權；<b>週六特別時段預約費 ¥10,000／人</b>，所以排週五</td><td><a href="https://www.tablecheck.com/zh-TW/shops/daiwazushi/reserve" target="_blank" rel="noopener">TableCheck</a></td></tr>
+          <tr><td>THE MOON 12/4 晚餐</td><td>週五六晚餐 18:00–23:00（L.O. 21:00）；窗邊座位另有方案，請在預約頁看</td><td><a href="https://www.tablecheck.com/en/shops/themoon/reserve" target="_blank" rel="noopener">TableCheck</a>（連結來自另一版，我未讀頁面）</td></tr>
+          <tr><td>LuggAgent</td><td>機場→飯店：<b>09:00–18:00</b> 在機場交件，當日 21:00 前送到飯店前台。飯店→機場：<b>11:00 前</b>交，當日 15:00–21:00 在機場領</td><td><a href="https://www.klook.com/zh-TW/activity/5624-airport-luggage-services-tokyo/?aid=417&utm_medium=affiliate-alwayson&utm_source=non-network&utm_campaign=417&utm_term=" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td>品川水族館 12/4 15:30</td><td>建議先買日期票。<b>請確認你要的是「品川アクアパーク」（15:30–18:30 可行），不是「しながわ水族館」（17:00 閉館）</b></td><td><a href="https://www.klook.com/zh-TW/search/result/?query=aqua%20park%20shinagawa" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td>六義園夜楓（備案）</td><td>前售 ¥1,000（僅線上，asoview，已開賣）；當日 ¥1,200（asoview 或門口現金）；入場出示手機畫面</td><td><a href="https://www.tokyo-park.or.jp/special/rikugien_lighting/index.html" target="_blank" rel="noopener">官方</a></td></tr>
+          <tr><td>Skyliner 12/6</td><td>可現場買；Klook 有時較便宜</td><td><a href="https://www.klook.com/zh-TW/search/result/?query=skyliner" target="_blank" rel="noopener">Klook</a></td></tr>
+          <tr><td>不用預約</td><td>花山烏冬、利久、Red Rock、宇奈とと、台場花火</td><td>—</td></tr>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>✈️ 航班資訊</summary>
+      <div class="body">
+        <div class="flight"><b>去程｜樂桃航空 MM620</b><br>出發｜2026/12/3 02:25・桃園國際機場 T1<br>抵達｜2026/12/3 06:30・成田國際機場 T1</div>
+        <div class="flight"><b>回程｜樂桃航空 MM627</b><br>出發｜2026/12/6 22:05・成田國際機場 T1<br>抵達｜2026/12/7 01:25・桃園國際機場 T1</div>
+        <ul><li>入境前先填 <a href="https://services.digital.go.jp/en/visit-japan-web/" target="_blank" rel="noopener">Visit Japan Web</a>。</li>
+        <li>樂桃櫃檯約起飛前 50–60 分鐘截止（以航班資訊為準）。</li></ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🚫 休館・休市・開放時間</summary>
+      <div class="body">
+        <ul>
+          <li><b>豐洲市場（水產）</b>：官網 CSV 顯示 12/3、12/4、12/5 開市；<b>12/6（日）休市</b>。12 月休市日：12/2、6、9、13、16、20、23、31。</li>
+          <li><b>皇居東御苑</b>：週一、週五休園；09:00–16:00（最後入園 15:30）。12/3（四）有開。</li>
+          <li><b>SHIBUYA SKY</b>：10:00–22:30，最終入場 21:20；元日休。</li>
+          <li><b>小石川後樂園</b>：「深山紅葉」11/21–12/6，白天 09:00–17:00（最後入園 16:30）。</li>
+          <li><b>旧古河庭園</b>：09:00–17:00（最後入園 16:30），紅葉活動到 12/6，入園 ¥150。</li>
+          <li><b>六義園</b>：夜間 11/25–12/6，18:00 起，最後入園 19:30，20:30 結束。</li>
+          <li><b>六本木</b>：欅坂 11/5–12/25（17:00–22:00）；66 廣場 11/13–12/27（17:00–24:00）；毛利庭園 11/13–12/25（17:00–23:00）；West Walk 聖誕樹 11/13–12/25（館內營業時間）；聖誕市集 11/21–12/25（11:00–21:00）。</li>
+          <li><b>森美術館</b>：除週二外到 22:00，週二 17:00 閉館。</li>
+          <li><b>台場彩虹花火</b>：12 月每週六 19:00（12/5、12、19、26），約 5 分鐘，暴風雨取消。主辦電話 03-5564-1202（平日 9:00–17:00）。</li>
+          <li><b>JCB 貴賓室 Executive Lounge 1</b>：07:00–21:00。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🚆 交通</summary>
+      <div class="body">
+        <h4>每日預設走電車，計程車當備案</h4>
+        <ul>
+          <li>喜來登 → 市區：舞濱站搭 JR 京葉線。新木場轉有樂町線（往豐洲）或轉臨海線（往台場、澀谷）。</li>
+          <li>計程車費用我沒有查，台場、六本木跨區在週六晚上可能塞車，只當備案。</li>
+          <li>用 <b>Suica／PASMO</b>（Apple Wallet）即可，百合海鷗號也能刷。</li>
+        </ul>
+        <h4>要不要買東京地鐵券</h4>
+        <p>24／48／72 小時 ¥1,000／1,500／2,000，只含東京 Metro 與都營地鐵，<b>不含 JR、百合海鷗號、京葉線、臨海線</b>。這趟大多搭不含的路線，所以不建議買。</p>
+        <ul><li><a href="https://www.klook.com/zh-TW/activity/1552-subway-ticket-tokyo/?aid=417&utm_medium=affiliate-alwayson&utm_source=non-network&utm_campaign=417&utm_term=" target="_blank" rel="noopener">Klook Tokyo Subway Ticket</a>・<a href="https://www.tokyometro.jp/lang_en/ticket/value/travel/" target="_blank" rel="noopener">Tokyo Metro 官方</a></li></ul>
+        <h4>機場</h4>
+        <ul>
+          <li>12/3 成田 → 東京站：成田特快 N-EX 約 60 分。</li>
+          <li>12/6 日暮里 → 成田 T1：京成 Skyliner 約 40 分。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🍁 賞楓總覽</summary>
+      <div class="body">
+        <ul>
+          <li><b>Day 1</b> 皇居東御苑（週四有開，週五休）</li>
+          <li><b>Day 4</b> 小石川後樂園（深山紅葉）→ 旧古河庭園（紅葉與玫瑰）→ 六義園（白天；夜楓 11/25–12/6 為備案）</li>
+          <li>三座庭園的活動都到 12/6 結束，Day 4 是最後機會。12/3–12/6 通常在見頃尾聲，出發前一週查 <a href="https://weathernews.jp/koyo/" target="_blank" rel="noopener">Weathernews</a>、<a href="https://koyo.walkerplus.com/" target="_blank" rel="noopener">Walkerplus</a>。</li>
+          <li><b>備案</b>：濱離宮恩賜庭園（09:00–17:00，¥300），離新橋近。</li>
+          <li>你去過的新宿御苑、明治神宮外苑我沒再排。</li>
+          <li><b>日光、川越、原宿三擇一</b>：選原宿（Day 3 上午）。日光 12 月初已過季；川越要大半天，卡 12/5 說明會。想改川越，林屋鰻魚飯在川越（11:00–17:00）：<a href="https://www.klook.com/zh-TW/search/result/?query=%E5%B7%9D%E8%B6%8A" target="_blank" rel="noopener">Klook</a>・<a href="https://www.kkday.com/zh-tw/product/productlist?keyword=%E5%B7%9D%E8%B6%8A" target="_blank" rel="noopener">KKday</a>。</li>
+          <li><b>Caretta 汐留點燈</b>：你給的文章是 2020 年資料，文末寫 2020–21 取消，之後沒找到再辦，也沒有 2026–27 公告，所以不排。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🍽️ 餐食安排與備案</summary>
+      <div class="body">
+        <div class="tblwrap"><table>
+          <tr><th>餐廳</th><th>狀態</th><th>安排</th></tr>
+          <tr><td>大和壽司</td><td>✅ 排入</td><td>Day 2 早餐（預約）</td></tr>
+          <tr><td>五代目 花山烏冬</td><td>✅ 排入</td><td>Day 1 午餐（銀座店）</td></tr>
+          <tr><td>牛たん 利久</td><td>✅ 排入</td><td>Day 1 晚餐（澀谷 Hikarie 店）</td></tr>
+          <tr><td>Red Rock</td><td>✅ 排入</td><td>Day 3 午餐（原宿店）</td></tr>
+          <tr><td>名代 宇奈とと</td><td>✅ 排入</td><td>Day 4 午餐（駒込店）</td></tr>
+          <tr><td>六歌仙</td><td>↔ 備選</td><td>只查到新宿西口。可換掉 Day 1 利久（澀谷搭埼京線 7 分）</td></tr>
+          <tr><td>林屋鰻魚飯</td><td>❌ 沒排</td><td>只查到川越店</td></tr>
+          <tr><td>白鬍子泡芙工房</td><td>❌ 沒排</td><td>只查到世田谷，動線相反</td></tr>
+        </table></div>
+        <p>SÉZANNE 本來就不在我排的行程裡。「好好吃一頓」現在是 Day 2 THE MOON（52F 夜景）與 Day 3 飯店內鐵板燒或自助餐。</p>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🧾 日本退稅新制（2026/11/1 起）</summary>
+      <div class="body">
+        <ol>
+          <li>購物時<b>先付含稅價</b>，出示護照並登記退款方式。</li>
+          <li>出境時，<b>安檢前</b>先到海關完成商品持出確認，確認後才退款。託運行李前先完成。</li>
+          <li>門檻：同一間店、同一天、稅前 ¥5,000 以上。</li>
+          <li>商品要真的帶出境；已使用或沒帶，整張收據可能失去資格。</li>
+          <li>退稅期限、手續費依店家與退稅業者而定（唐吉訶德、Bic Camera 等部分店家免手續費）。</li>
+        </ol>
+        <p>Day 4 在成田預留 30–40 分鐘。<a href="https://www.fun-japan.jp/tw/articles/14790" target="_blank" rel="noopener">Fun! Japan 說明</a>・以觀光廳公告為準。</p>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🛋️ JCB 貴賓室（成田 T1）</summary>
+      <div class="body">
+        <ul>
+          <li><b>已在 JCB 台灣官網名單上</b>：成田 T1「IASS EXECUTIVE LOUNGE 1」。成田官網：T1 中央大樓 5F、<b>安檢前</b>、<b>07:00–21:00</b>。</li>
+          <li>JCB 2026/4/1–2027/3/31：<b>晶緻卡每期最多免費 6 次</b>。</li>
+          <li>要出示<b>實體 JCB 卡</b>（手機畫面不行）＋<b>登機證或機票</b>，姓名需與卡片相同；每張登機證限用一次。</li>
+          <li><b>貴賓室 21:00 關</b>，所以 Day 4 要在 20:30 前進去，並在 21:00 前出來登機。</li>
+          <li>我沒查到：樂桃（LCC）登機證是否接受，以及你這張卡確切等級。請先向中信或 JCB 客服確認。</li>
+          <li><a href="https://www.tw.jcb/zh-tw/consumers/platinum/airport-lounge/index.html" target="_blank" rel="noopener">JCB 台灣</a>・<a href="https://www.narita-airport.jp/en/service/lounge/credit/" target="_blank" rel="noopener">成田機場 Lounge</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🧳 LuggAgent</summary>
+      <div class="body">
+        <ul>
+          <li><b>去程</b>：機場收件 <b>09:00 起</b>，所以 06:30 落地後要等到 09:00 才能交，我把 Day 1 排成 09:00 交件、09:20 前後搭車。</li>
+          <li><b>回程</b>：12/6 <b>11:00 前</b>交給飯店前台，當天 15:00–21:00 到成田領。</li>
+          <li>行李可能比你晚到飯店（21:00 前），<b>換洗衣物、藥、充電器放隨身包</b>。</li>
+          <li>替代方案：成田 T1 搭機場巴士直達喜來登寄行李。我沒查到班次與票價，請先確認；若走這條，Day 1 會損失約 1.5 小時。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary>🌡️ 天氣與打包</summary>
+      <div class="body">
+        <ul>
+          <li>12 月初東京約 5–14°C。SKY 屋頂與台場海邊風大。</li>
+          <li><b>SHIBUYA SKY 屋頂禁帶</b>：包包、帽子、耳機、腳架、自拍棒、飲食。要放 46F 置物櫃，口袋放手機與護照。</li>
+          <li>護照、JCB 實體卡、行動電源、好走的鞋、折疊傘。</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec" open>
+      <summary>✅ 行前 Checklist（自動記住勾選）</summary>
+      <div class="body check" id="checks">
+        <label><input type="checkbox" data-k="vjw">完成 Visit Japan Web</label>
+        <label><input type="checkbox" data-k="sky">搶到 SHIBUYA SKY 12/3 16:00（台灣 11/18 23:00 開賣）</label>
+        <label><input type="checkbox" data-k="daiwa">大和壽司 12/4 TableCheck 已預約</label>
+        <label><input type="checkbox" data-k="moon">THE MOON 12/4 晚餐已預約</label>
+        <label><input type="checkbox" data-k="aqua">確認是品川アクアパーク並買票（15:30）</label>
+        <label><input type="checkbox" data-k="luggout">LuggAgent 去程與回程已訂</label>
+        <label><input type="checkbox" data-k="jcb">帶 JCB 實體卡，並向中信確認貴賓室資格</label>
+        <label><input type="checkbox" data-k="tax">退稅商品放在容易拿出的位置</label>
+        <label><input type="checkbox" data-k="fw">12/5 下午再確認台場花火有沒有因天氣取消</label>
+        <label><input type="checkbox" data-k="weather">出發前 3 天查天氣、楓葉實況、臨時休館</label>
+        <div class="prog"><i id="prog"></i></div>
+        <div class="src" id="progtext" style="margin-top:6px"></div>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer>資料依 2026-11-18 的官方頁面與搜尋整理，營業時間與票價可能調整，出發前 72 小時請再看一次官方連結。</footer>
+
+<script>
+const PIN='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.3" fill="currentColor"/></svg>';
+const E=encodeURIComponent;
+const MAP=q=>'https://www.google.com/maps/search/?api=1&query='+E(q);
+const DIR=(a,b)=>'https://www.google.com/maps/dir/?api=1&origin='+E(a)+'&destination='+E(b)+'&travelmode=transit';
+const KL='https://www.klook.com/zh-TW/search/result/?query=';
+const LUGG='https://www.klook.com/zh-TW/activity/5624-airport-luggage-services-tokyo/?aid=417&utm_medium=affiliate-alwayson&utm_source=non-network&utm_campaign=417&utm_term=';
+const S=(time,name,desc,o={})=>({time,name,desc,...o});
+const T=text=>({transfer:text});
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const DAYS={
+day1:{title:'Day 1｜12/3（四）東京站・銀座・皇居・澀谷 SKY',sub:'輕鬆啟動',
+banner:'<b>延誤時的優先順序：</b>16:00 SHIBUYA SKY 一定保留；皇居東御苑最先砍（最後入園 15:30）。<small>凌晨 02:25 起飛、06:30 落地，睡眠不足，所以今天都在市中心移動。</small>',
+items:[
+S('06:30','成田 T1 抵達・入境・早餐','LuggAgent 機場收件要 <b>09:00</b> 才開始，所以落地後有約 1 小時空檔：吃早餐、買 SIM、換錢。JCB 貴賓室 07:00 起、在安檢前，可以進去休息，但每張登機證限用一次、樂桃登機證是否可用沒查到，要現場確認。',{stay:'約 2.5 小時',addr:'成田空港第1ターミナル',q:'Narita Airport Terminal 1',tags:[['book','先預約 LuggAgent（Klook）'],['warn','收件時間 09:00–18:00，當天 21:00 前送到飯店前台'],['warn','隨身包放換洗衣物、藥、充電器']],links:[['預約行李配送',LUGG]],html:true}),
+T('09:00 交行李後，搭成田特快 N\'EX：成田 T1 → 東京站，約 60 分鐘（約 10:45 抵達）'),
+S('10:50','東京站一番街','地下街有東京拉麵街、角色街、東京零食樂園（Tokyo Okashi Land），先買伴手禮。若想先吃一點，拉麵街可以補。',{stay:'約 1 小時',addr:'東京站一番街（八重洲地下）',q:'Tokyo Station Ichibangai',tags:[['warn','店家多 10:00 起營業'],['ok','今天買退稅品先別拆封']]}),
+T('搭丸之內線 東京 → 銀座（約 4 分），步行約 10 分到東銀座'),
+S('12:15','五代目 花山烏冬 銀座店｜午餐','歌舞伎座後方、日本冠軍的超寬板狀烏龍麵。',{stay:'約 1 小時',addr:'東京都中央區銀座 3-14-13',q:'Godaime Hanayama Udon Ginza',tags:[['warn','平日約 11:00–15:30、17:30–21:30（各站說法略異）'],['warn','常排隊，麵賣完會提早收'],['ok','電話 03-6264-7336']]}),
+T('搭日比谷線／丸之內線到大手町（約 10 分），步行到皇居大手門'),
+S('13:45','皇居東御苑','江戶城本丸跡、二之丸庭園與石垣，市中心少見的楓、銀杏。免費、不用預約。',{stay:'約 1.25 小時',addr:'東京都千代田區千代田 1-1',q:'Imperial Palace East Gardens Tokyo',tags:[['ok','免費免預約'],['warn','週一、週五休園，只有今天（四）能排'],['warn','09:00–16:00，最後入園 15:30']]}),
+T('15:00 離開：大手町搭半藏門線直達澀谷，約 20 分鐘；15:40 前到 Scramble Square 14F'),
+S('16:00','SHIBUYA SKY｜白天 → 日落 → 夜景','16:00 入場，約 16:30 日落，天黑看夜景。屋頂禁帶包包、帽子、耳機，要放 46F 置物櫃。',{stay:'約 1.5–2 小時',addr:'東京都澀谷區澀谷 2-24-12 Scramble Square 14F',q:'SHIBUYA SKY',tags:[['book','2 週前日本 00:00 開賣＝台灣 11/18 23:00，今晚就搶'],['warn','入場要護照；時段 20 分鐘一格，遲到可能被拒'],['warn','屋頂關閉時，入場前可免費取消']],links:[['官方購票','https://www.shibuya-scramble-square.com/sky/ticket/'],['FAQ','https://www.shibuya-scramble-square.com/sky/faq/']]}),
+T('步行約 5–10 分鐘到澀谷 Hikarie'),
+S('18:15','牛たん炭焼 利久 澀谷 Hikarie 店｜晚餐','仙台牛舌。澀谷站直結，吃完可直接搭車回飯店。想換燒肉吃到飽可改去新宿六歌仙（見行前提醒）。',{stay:'約 1.25 小時',addr:'澀谷 Hikarie',q:'Gyutan Rikyu Shibuya Hikarie',tags:[['ok','11:00–23:00（L.O. 22:00）'],['warn','用餐時段可能排隊']]}),
+T('回飯店：JR 埼京線直通臨海線 澀谷 → 新木場（約 35 分），轉京葉線到舞濱（約 8 分）；全程約 1 小時。行李 21:00 前到前台')
+]},
+
+day2:{title:'Day 2｜12/4（五）豐洲・品川水族館・六本木夜景',sub:'全天最滿的一天',
+banner:'<b>延誤時的優先順序：</b>大和壽司預約、15:30 品川水族館（看秀）、THE MOON 預約。銀座購物與森美術館最先砍。<small>07:15 出發、約 23:15 回飯店，早點睡。大和壽司週六的預約費是 ¥10,000／人，所以排週五。</small>',
+items:[
+T('07:15 離開飯店：京葉線舞濱 → 新木場 → 有樂町線豐洲 → 百合海鷗號市場前站，約 55–60 分鐘'),
+S('08:30','大和壽司（豐洲市場）早餐','豐洲市場水產仲卸賣場棟 3F，江戶前壽司。已預約的話不用排 1–2 小時的隊。',{stay:'約 1 小時',addr:'豐洲市場 水產仲卸賣場棟 3F',q:'Daiwa Sushi Toyosu Market',tags:[['book','TableCheck：只收 1–2 人，預約受理 08:00–10:00 時段'],['warn','預約費 ¥400／人，不退款；用餐上限 1 小時；要信用卡預授權'],['ok','12/4 開市；電話 050-3144-0220']],links:[['預約大和壽司','https://www.tablecheck.com/zh-TW/shops/daiwazushi/reserve']]}),
+S('09:45','豐洲市場逛逛','吃完順手逛水產仲卸賣場，買玉子燒等小吃。',{stay:'約 45 分鐘',addr:'東京都江東區豐洲 6-6-2',q:'Toyosu Market',tags:[['warn','週日休市，今天是最後機會之一']]}),
+T('步行約 5–10 分鐘到千客萬來'),
+S('10:30','豐洲千客萬來・萬葉俱樂部泡湯・午餐','江戶風美食街、足湯庭園與溫泉。午餐在這裡吃。第一次泡湯建議 60–75 分鐘，13:00 離開。',{stay:'約 2.5 小時',addr:'東京都江東區豐洲 6-5-1',q:'Toyosu Senkyaku Banrai',tags:[['warn','入館約 ¥3,850（大人）＋入湯稅，依官網為準'],['warn','溫泉 24 小時，約 03:00–05:00 清掃'],['warn','足湯庭園時間兩說：9–22 或 10–20']],links:[['官網','https://tokyo-toyosu.manyo.co.jp/']]}),
+T('13:00 離開：百合海鷗號豐洲 → 新橋，約 25 分鐘'),
+S('13:30','銀座快速採買（選配）','Marronnier Gate Ginza 2：DAISO、Standard Products 等，再到藥妝店補貨。只買確定要買的，14:30 一定離開。',{stay:'約 1 小時',addr:'東京都中央區銀座 2 丁目',q:'Marronnier Gate Ginza 2',tags:[['warn','這項來自另一版行程，我不確定是不是你的需求，不要可以砍']]}),
+T('14:30 離開：JR 新橋／有樂町 → 品川，約 5–10 分鐘'),
+S('15:30','品川アクアパーク（15:30–18:30）','下午 15:30 入場，看傍晚到晚間的表演，18:30 離館。',{stay:'3 小時',addr:'東京都港區高輪 4-10-30 品川王子大飯店內',q:'Aqua Park Shinagawa',tags:[['book','建議先買日期指定票'],['warn','10:00–20:00，最後入場 19:00；表演時間請看官網當日表'],['warn','請確認是 Aqua Park，不是 17:00 閉館的しながわ水族館']],links:[['Klook',KL+'aqua%20park%20shinagawa']]}),
+T('18:30 離館：JR 品川 → 惠比壽（山手線約 7 分），轉日比谷線到六本木（約 8 分），全程約 30 分鐘'),
+S('19:15','六本木之丘聖誕燈飾＋聖誕市集','先逛市集（21:00 結束），再看各會場點燈。<br>・欅坂 SNOW &amp; BLUE：11/5–12/25，17:00–22:00<br>・66 廣場：11/13–12/27，17:00–24:00（最終日至 23:00）<br>・毛利庭園：11/13–12/25，17:00–23:00<br>・West Walk 聖誕樹（Tiffany）：11/13–12/25，館內營業時間<br>・六本木聖誕市集（大屋頂廣場）：11/21–12/25，11:00–21:00',{stay:'約 1 小時',addr:'東京都港區六本木 6-10-1 六本木之丘',q:'Roppongi Hills',tags:[['ok','12/4 各會場都在期間內'],['warn','聖誕市集 21:00 結束，要先逛']],html:true}),
+T('步行到森大樓，搭電梯到 52F'),
+S('20:15','THE MOON｜52F 天空之森景觀餐廳','海拔約 250 公尺，整排落地窗可看東京鐵塔與東京夜景，料理每季更換。12/4 週五晚餐 18:00–23:00（L.O. 21:00，飲品 L.O. 22:00）。',{stay:'約 1.25 小時',addr:'東京都港區六本木 6-10-1 六本木之丘 森大樓 52F',q:'THE MOON Roppongi Hills Mori Tower 52F',tags:[['book','先訂位，窗邊座位另有方案'],['ok','午餐／下午茶 11:00–17:00（L.O. 15:00），平日午餐約 ¥4,000'],['ok','六本木站 3 號出口步行約 7 分']],links:[['TableCheck 預約','https://www.tablecheck.com/en/shops/themoon/reserve']]}),
+S('21:30','森美術館（選配）','53F 現代藝術美術館，晚餐後可看夜晚的展覽。除週二外開到 22:00，12/4 週五有開。',{stay:'約 30 分鐘',addr:'東京都港區六本木 6-10-1 六本木新城森塔 53F',q:'Mori Art Museum',tags:[['warn','最後入館時間與票價請看官網，晚餐拖長就跳過'],['ok','電話 050-5541-8600']]}),
+T('回飯店：六本木 → 日比谷線八丁堀（約 20 分），轉京葉線到舞濱約 30 分；約 22:00 出發，23:15 前回到')
+]},
+
+day3:{title:'Day 3｜12/5（六）原宿・飯店說明會・台場花火',sub:'下午固定行程',
+banner:'<b>固定行程：</b>15:30–18:00 飯店說明會、19:00 台場花火。<small>花火因暴風雨會取消；取消的話就回飯店吃晚餐。上午一定要在 13:30 前離開原宿。</small>',
+items:[
+T('08:45 離開飯店：京葉線舞濱 → 東京，轉 JR 到原宿，約 1 小時 10 分（以 Google Maps 為準）'),
+S('10:15','原宿・竹下通・表參道（Priority 2：原宿）','竹下通與表參道的服飾與潮流店，UNIQLO／GU、BEAMS、UNITED ARROWS、PLST 等。店家多 11:00 前後才開。',{stay:'約 1.25 小時',addr:'原宿・表參道周邊',q:'Takeshita Street Harajuku',tags:[['warn','服飾採買來自另一版行程，不要可以砍']]}),
+S('11:30','Red Rock 原宿店｜神戶牛烤牛肉丼','原宿地下 1 樓，不接受訂位，要排隊。',{stay:'約 1 小時',addr:'東京都澀谷區神宮前 3-25-12 FUJI BLD B1F',q:'Red Rock Harajuku',tags:[['warn','11:30–22:00（各網站略有出入）'],['warn','不接受訂位，現場排隊'],['ok','電話 03-6721-1729']],links:[['官網','https://redrock-kobebeef.com/']]}),
+S('12:30','表參道最後採買','13:30 一定離開，搭車回飯店，目標 14:45 前到。',{stay:'約 1 小時',addr:'表參道',q:'Omotesando Tokyo'}),
+T('13:30 離開：JR 原宿 → 東京 → 京葉線舞濱，約 1 小時 10 分'),
+S('15:30','飯店說明會（至 18:00）','此時段不排行程。14:45 回到飯店休息，把外套準備好。',{tags:[['warn','請準時，提前 10–15 分到']]}),
+T('18:10 出發：京葉線舞濱 → 新木場 → 臨海線東京電訊（約 35 分），步行約 10 分到台場海濱公園。說明會若延遲就放棄'),
+S('19:00','台場彩虹花火（台場海濱公園）','12 月每週六 19:00「台場彩虹花火 2026」，12/5、12、19、26 共 4 場，約 5 分鐘，從「自由女神像」外海施放。沒有特設觀賞席，在台場一帶站著看。',{stay:'約 30 分鐘',addr:'東京都港區台場 1-4-1',q:'Odaiba Seaside Park',tags:[['ok','免費，沒有觀賞席'],['warn','暴風雨取消'],['warn','海邊夜晚很冷、風大']],links:[['官方','https://www.tokyo-odaiba.net/zh-tw/rainbow2026/']]}),
+S('19:45','晚餐（台場，或回飯店）','A. <b>台場 DiverCity、Aqua City、Decks</b> 餐廳街，現場選。<br>B. 回飯店：<b>2F 舞浜 Teppanyaki+</b>，17:30–23:00（最終入店 21:30）。<br>C. 回飯店：<b>1F Grand Café 自助餐</b>，6:00–23:00（L.O. 22:30），價格請確認。',{stay:'約 1.25 小時',addr:'台場／東京灣喜來登大飯店',q:'DiverCity Tokyo Plaza',tags:[['book','選回飯店吃，建議先預約']],html:true}),
+T('回飯店：臨海線東京電訊 → 新木場 → 京葉線舞濱，約 35 分鐘')
+]},
+
+day4:{title:'Day 4｜12/6（日）三座名園賞楓・回台灣',sub:'白天賞楓，傍晚飛',
+banner:'<b>延誤時的優先順序：</b>17:00 前離開駒込、18:30 前到成田。六義園最先砍。<small>三座庭園的紅葉活動都到 12/6 為止，今天是最後機會。JCB 貴賓室 21:00 關。</small>',
+items:[
+S('07:45','退房・交行李','11:00 前交給飯店前台，當天 15:00–21:00 在成田領。',{tags:[['book','先在 Klook 預約回程配送'],['warn','隨身包放護照、藥、換洗衣物']],links:[['預約行李配送',LUGG]]}),
+T('08:15 出發：京葉線舞濱 → 東京，轉丸之內線到後樂園或飯田橋，步行約 8 分；全程約 1 小時 10 分'),
+S('09:30','小石川後樂園｜深山紅葉','江戶初期的大名庭園，圓月橋、蓬萊島一帶的楓葉是東京經典。',{stay:'約 1.5 小時',addr:'東京都文京區後樂 1-6-6',q:'Koishikawa Korakuen',tags:[['ok','「深山紅葉」11/21–12/6，09:00–17:00（最後入園 16:30）'],['warn','入園費官方頁沒列，請看官網']],links:[['官方活動','https://www.tokyo-park.or.jp/park/koishikawakorakuen/news/2026/8_11_20_12_6.html']]}),
+T('搭南北線 後樂園 → 西ケ原（約 12 分），步行約 7 分鐘'),
+S('11:30','旧古河庭園｜洋館 × 日式庭園','洋館、玫瑰園與日式庭園並存。「紅葉與玫瑰・和與洋的秋」11/7–12/6。',{stay:'約 1.25 小時',addr:'東京都北區西原 1-27-39',q:'Kyu-Furukawa Gardens',tags:[['ok','09:00–17:00（最後入園 16:30），入園 ¥150'],['warn','見頃多在 11 月中到 12 月初，12/6 是尾聲']]}),
+T('南北線 西ケ原 → 駒込，1 站約 3 分鐘'),
+S('13:00','名代 宇奈とと 駒込店｜午餐','搜尋到東京的宇奈とと有駒込店，離六義園近，平價鰻魚丼。',{stay:'約 45 分鐘',addr:'駒込站周邊',q:'Nadai Unatoto Komagome',tags:[['warn','營業時間請以 Google Maps 為準'],['ok','不用預約']]}),
+T('步行約 7 分鐘到六義園'),
+S('14:15','六義園','日本庭園的代表，吹上茶屋可喝抹茶休息。',{stay:'約 2 小時（至 16:15）',addr:'東京都文京區本駒込 6-16-3',q:'Rikugien Garden',tags:[['warn','白天 09:00–17:00 開放，入園費請看官網'],['ok','夜楓備案：11/25–12/6，18:00 起，最後入園 19:30；前售 ¥1,000、當日 ¥1,200']],links:[['夜楓官方','https://www.tokyo-park.or.jp/special/rikugien_lighting/index.html']]}),
+T('16:15 離開：駒込 → 日暮里（JR 山手線約 6 分），轉京成 Skyliner 到成田機場第 1 航廈，約 40 分鐘；建議先買 Skyliner 票'),
+S('18:30','成田 T1：領行李・退稅確認・托運','先領 LuggAgent 行李，在<b>安檢前</b>到海關辦退稅確認，再辦樂桃托運。',{stay:'約 1 小時',addr:'成田空港第1ターミナル',q:'Narita Airport Terminal 1',tags:[['warn','退稅新制：出境海關確認後才退款，免稅品不要先托運'],['warn','樂桃櫃檯約起飛前 50–60 分鐘截止']],links:[['退稅新制','https://www.fun-japan.jp/tw/articles/14790'],['Skyliner 購票',KL+'skyliner']],html:true}),
+S('19:30','JCB 貴賓室 Executive Lounge 1','中央大樓 5F、安檢前，<b>07:00–21:00</b>。出示實體 JCB 卡＋登機證。晚餐在這裡簡單吃，21:00 前出來。',{stay:'約 1 小時',addr:'成田 T1 中央大樓 5F',q:'Narita Airport Terminal 1 Central Building 5F',tags:[['warn','樂桃登機證是否接受、卡片等級請先向中信／JCB 確認'],['warn','21:00 關，別待太晚']],html:true}),
+S('22:05','樂桃 MM627 起飛','12/7 01:25 抵達桃園 T1。',{tags:[['ok','🛫']]}),
+S('夜楓備案','六義園夜楓（取代白天六義園）','若想看夜楓：砍掉 14:15 的白天六義園，17:00–18:00 在駒込休息，18:00 入園、18:50 離開，到成田約 20:15，貴賓室只剩約 40 分鐘，樂桃櫃檯較趕。',{tags:[['book','前售 ¥1,000（僅線上）；當日 ¥1,200（線上或門口現金）'],['warn','較趕，建議平安優先']],links:[['夜楓官方','https://www.tokyo-park.or.jp/special/rikugien_lighting/index.html']]})
+]}
+};
+
+function render(id){
+  const d=DAYS[id], el=document.getElementById(id);
+  let h=`<div class="day-heading"><h2>${esc(d.title)}</h2><span>${esc(d.sub)}</span></div><div class="banner">${d.banner}</div><div class="stops">`;
+  let prevQ=null;
+  for(const x of d.items){
+    if(x.transfer){h+=`<div class="transfer">${esc(x.transfer)}</div>`;continue;}
+    const tags=(x.tags||[]).map(([k,t])=>`<span class="tag ${k}">${esc(t)}</span>`).join('');
+    let links=(x.links||[]).map(([l,u])=>`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(l)}</a>`).join('');
+    if(prevQ&&x.q&&x.time!=='夜楓備案'&&prevQ!==x.q)links+=`<a class="route" href="${esc(DIR(prevQ,x.q))}" target="_blank" rel="noopener">電車路線</a>`;
+    const desc=x.html?x.desc:esc(x.desc);
+    h+=`<article class="stop"><div class="time">${esc(x.time)}</div><div><h3 class="place">${esc(x.name)}</h3><p class="desc">${desc}</p>`+
+       (x.stay?`<p class="meta">建議停留 ${esc(x.stay)}</p>`:'')+
+       (tags?`<div class="tags">${tags}</div>`:'')+
+       (links?`<div class="links">${links}</div>`:'')+`</div>`+
+       (x.q?`<div class="side"><a class="map-icon" href="${MAP(x.q)}" target="_blank" rel="noopener" aria-label="在 Google Maps 開啟 ${esc(x.name)}" title="Google Maps">${PIN}</a><p class="addr">${esc(x.addr||'')}</p></div>`:'')+`</article>`;
+    if(x.q)prevQ=x.q;
+  }
+  el.innerHTML=h+'</div>';
+}
+Object.keys(DAYS).forEach(render);
+
+const tabs=[...document.querySelectorAll('[role=tab]')], panels=[...document.querySelectorAll('[role=tabpanel]')];
+function show(tab){
+  tabs.forEach(t=>{const s=t===tab;t.setAttribute('aria-selected',s);t.tabIndex=s?0:-1;});
+  panels.forEach(p=>p.hidden=p.id!==tab.getAttribute('aria-controls'));
+  try{history.replaceState(null,'','#'+tab.getAttribute('aria-controls'))}catch(e){}
+  window.scrollTo({top:0});
+}
+tabs.forEach((t,i)=>{
+  t.addEventListener('click',()=>show(t));
+  t.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;
+    e.preventDefault();
+    const n=tabs[(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length];n.focus();show(n);
+  });
+});
+const h=location.hash.slice(1), start=tabs.find(t=>t.getAttribute('aria-controls')===h);
+if(start)show(start);
+
+const checks=[...document.querySelectorAll('#checks input')];
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function prog(){
+  const done=checks.filter(c=>c.checked).length;
+  document.getElementById('prog').style.width=(done/checks.length*100)+'%';
+  document.getElementById('progtext').textContent='完成度 '+done+'/'+checks.length;
+}
+checks.forEach(c=>{c.checked=store.get('tokyo26v6_'+c.dataset.k)==='1';c.addEventListener('change',()=>{store.set('tokyo26v6_'+c.dataset.k,c.checked?'1':'0');prog();});});
+prog();
+</script>
+</body>
+</html>
